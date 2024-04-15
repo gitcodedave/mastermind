@@ -3,8 +3,7 @@ const cors = require('cors');
 const path = require("path");
 
 /* Insert routers */
-const randomNumRouter = require('./routes/randomNumRouter.js');
-const guessNumRouter = require('./routes/guessNumRouter.js')
+const gameRouter = require('./routes/gameRouter.js')
 
 const PORT = 3000;
 const app = express();
@@ -12,8 +11,7 @@ app.use(express.json())
 app.use(cors());
 
 /* Connect API routes */
-app.use('/randomNum', randomNumRouter);
-app.use('/guessNum', guessNumRouter);
+app.use('/game', gameRouter);
 
 app.use(express.static('dist'));
 app.get('/', (req, res) => {
