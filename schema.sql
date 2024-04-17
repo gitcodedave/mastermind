@@ -1,7 +1,7 @@
 CREATE DATABASE mastermind;
 USE mastermind;
 
-CREATE TABLE gameSettings (
+CREATE TABLE IF NOT EXISTS gameSettings (
 	id INT PRIMARY KEY AUTO_INCREMENT,
 	secretNumber VARCHAR(6) DEFAULT '1234',
     difficulty integer DEFAULT '4',
@@ -9,7 +9,7 @@ CREATE TABLE gameSettings (
     gameStatus VARCHAR(20) DEFAULT 'playing'
 );
 
-CREATE TABLE currentGame (
+CREATE TABLE IF NOT EXISTS currentGame (
     attemptId INT PRIMARY KEY AUTO_INCREMENT, 
     guess VARCHAR(6),
     correctLocation integer,

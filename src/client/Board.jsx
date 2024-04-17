@@ -2,9 +2,8 @@ import React from "react";
 import axios from "axios";
 import { useState, useEffect, useRef } from 'react';
 
-
-
 export default function Board () {
+
     const [difficulty, setDifficulty] = useState();
     const [guess, setGuess] = useState([]);
     const [attemptRows, setAttempt] = useState([])
@@ -16,7 +15,6 @@ export default function Board () {
     const [timerModeOn, setTimerMode] = useState(false);
     const timeRef = useRef(null);
     */
-    let attemptState = '';
 
     async function handleDifficultyChange (event){
         event.preventDefault();
@@ -44,7 +42,7 @@ export default function Board () {
         }
     }
     */
-
+    
     function clearForms (){
         let allForms = document.querySelectorAll('input');
         allForms.forEach(eachInput => eachInput.value = '');
@@ -157,7 +155,6 @@ export default function Board () {
         .then((data) => {
             gameData = data.data;
             setDifficulty(gameData.difficulty);
-            attemptState = gameData.attemptNumber;
         })
         axios.get(`http://localhost:3000/game/currentGame`)
         .then((data) => {
