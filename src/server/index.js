@@ -1,9 +1,11 @@
 const express = require("express");
 const cors = require('cors');
-const path = require("path");
+const path = require('path');
+const mysql = require('mysql');
+const { error } = require("console");
 
 /* Insert routers */
-const gameRouter = require('./routes/gameRouter.js')
+const gameRouter = require('./routes/gameRouter.js');
 
 const PORT = 3000;
 const app = express();
