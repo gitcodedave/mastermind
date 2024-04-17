@@ -102,4 +102,10 @@ gameController.guess = async (req, res, next) => {
     }
 }
 
+gameController.resetHighScore = async (req, res, next) => {
+    const newScore = await db.resetHighScore();
+    res.locals.scores = newScore;
+    next();
+}
+
 module.exports = gameController;

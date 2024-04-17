@@ -28,4 +28,10 @@ router.get('/changeDifficulty/:difficulty', gameController.changeDifficulty, (re
     return res.status(200).json(res.locals.difficulty);
 })
 
+/* GET request will make a query to the database to reset the scores */
+router.get('/resetHighScore', gameController.resetHighScore, (req, res, next) => {
+    return res.status(200).json(res.locals.scores);
+})
+
+
 module.exports = router;

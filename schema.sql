@@ -6,7 +6,9 @@ CREATE TABLE IF NOT EXISTS gameSettings (
 	secretNumber VARCHAR(6) DEFAULT '1234',
     difficulty integer DEFAULT '4',
     attemptNumber integer DEFAULT '0',
-    gameStatus VARCHAR(20) DEFAULT 'playing'
+    gameStatus VARCHAR(20) DEFAULT 'playing', 
+    winScore integer DEFAULT '0',
+    loseScore integer DEFAULT '0'
 );
 
 CREATE TABLE IF NOT EXISTS currentGame (

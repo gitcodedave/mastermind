@@ -9,6 +9,7 @@ export default function Board () {
     const [attemptRows, setAttempt] = useState([])
     const [gameStatusState, setGameStatusState] = useState('')
     const [incompleteGuessState, setIncompleteGuess] = useState('')
+    const [highScore, setHighScore] = useState([0, 0])
     /* TIME CODE
     const [isRunning, setIsRunning] = useState(true);
     const [time, setTime] = useState(30);
@@ -68,6 +69,21 @@ export default function Board () {
         clearForms();
     }
 
+    function updateHighScore (){
+        axios.get(`http://localhost:3000/game/gameSettings`)
+        .then((data) => {
+            const highScore = data.data.winScore;
+            const loseScore = data.data.loseScore;
+            setHighScore([highScore, loseScore])     
+        })
+    }
+    function handleResetHighScore(){
+        axios.get(`http://localhost:3000/game/resetHighScore`)
+        .then((data) => {
+            setHighScore([0,0])     
+        })
+    }
+
     async function handleGuessClick (event){
         /* TIME CODE
         if(isRunning) setTime(30);
@@ -90,7 +106,7 @@ export default function Board () {
                 let newAttemptRow = [...attemptRows];
                 const currentGameData = data.data.currentGameData;
                 const secretNumber = data.data.gameStatus.secretNumber;
-                
+                updateHighScore();
                 const index = newAttemptRow.length;
                     newAttemptRow.push(<tr key={`attempt row ${index+1}`}>
                     <td style={{ textAlign: 'center', border: '1px solid #181818', color: '#ffffff' }}>{index+1}</td>
@@ -102,14 +118,14 @@ export default function Board () {
                 setAttempt(newAttemptRow);
                 if(currentGameData[index].correctLocation === difficulty && currentGameData[index].attemptId <= 10){
                     newAttemptRow.push(<tr key='win row'>
-                        <td style={{color: 'green'}}>You won! Start a new game.</td>
+                        <td style={{color: '#7FFFD4'}}>You won! Start a new game.</td>
                         </tr>
                         )
                     setAttempt(newAttemptRow)
                     setGameStatusState('won')
                 } else if (currentGameData[index].attemptId == 10){
                     newAttemptRow.push(<tr key='lose row'>
-                        <td style={{color: 'red'}}>You lost! The number was <b>{secretNumber}</b>. Try again.</td>
+                        <td style={{color: '#F88379'}}>You lost! The number was <b>{secretNumber}</b>. Try again.</td>
                         </tr>
                         )
                     setAttempt(newAttemptRow)
@@ -155,6 +171,7 @@ export default function Board () {
         .then((data) => {
             gameData = data.data;
             setDifficulty(gameData.difficulty);
+            setHighScore([gameData.winScore, gameData.loseScore])
         })
         axios.get(`http://localhost:3000/game/currentGame`)
         .then((data) => {
@@ -175,14 +192,14 @@ export default function Board () {
             if(gameStatus == 'won'){
                 newAttempt.push(
                     <tr key='win row'>
-                    <td style={{color: 'green'}}>You won! Start a new game.</td>
+                    <td style={{color: '#7FFFD4'}}>You won! Start a new game.</td>
                     </tr>
                 )
                 setGameStatusState('won')
             } else if(gameStatus == 'lost'){
                 newAttempt.push(
                     <tr key='lose row'>
-                    <td style={{color: 'red'}}>You lost! The number was <b>{gameData.secretNumber}</b>. Try again.</td>
+                    <td style={{color: '#F88379'}}>You lost! The number was <b>{gameData.secretNumber}</b>. Try again.</td>
                     </tr>
                 )
                 setGameStatusState('lost')
@@ -249,6 +266,13 @@ export default function Board () {
             <br></br>
             <br></br>
                 <button type="button" style={{ fontFamily: 'inherit', background: '#F8DE7E', border: 'none' }} onClick={handleNewGameClick}>New Game</button>
+            <br></br>
+            <br></br>
+            <div style={{ textAlign: 'center', color: '#ffffff', width: '80px', paddingTop: '5px', paddingBottom: '5px' }}>
+                   <span style={{color:'#87CEEB'}}> Wins: {highScore[0]}</span><br></br>
+                    <span style={{ color: '#F88379'}}>Losses: {highScore[1]}</span>
+                </div>
+                <button style={{ fontFamily: 'inherit', background: '#87CEEB', border: 'none' }} onClick={handleResetHighScore}>Reset Scores</button>
             <br></br>
             <br></br>
             <table style={{ borderCollapse: 'collapse' }}>
