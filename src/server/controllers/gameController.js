@@ -12,7 +12,7 @@ gameController.getCurrentGameData = async (req, res, next) => {
     const currentGameData = await db.getCurrentGameData();
     const gameSettings = await db.getGameSettingData();
     res.locals.currentGameData = currentGameData;
-    res.locals.gameStatus = gameSettings.gameStatus;
+    res.locals.gameStatus = gameSettings;
     next();
 }
 
@@ -43,6 +43,7 @@ gameController.guess = async (req, res, next) => {
     /* Constants are created to store the client's guess, as well as the secret number to compare with */
     const inputGuess = req.params.guess.split('');
     const inputGuessCache = req.params.guess.split('');
+
     const answerCache = gameSettings.secretNumber.toString().split('');
     const attemptNumber = gameSettings.attemptNumber+=1;
 

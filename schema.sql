@@ -6,7 +6,7 @@ CREATE TABLE gameSettings (
 	secretNumber VARCHAR(6) DEFAULT '1234',
     difficulty integer DEFAULT '4',
     attemptNumber integer DEFAULT '0',
-    gameStatus VARCHAR(20)
+    gameStatus VARCHAR(20) DEFAULT 'playing'
 );
 
 CREATE TABLE currentGame (
@@ -14,10 +14,6 @@ CREATE TABLE currentGame (
     guess VARCHAR(6),
     correctLocation integer,
     correctNumber integer
-);
-
-CREATE TABLE user (
-    id integer PRIMARY KEY AUTO_INCREMENT
 );
 
 INSERT INTO gameSettings (secretNumber, difficulty, attemptNumber, gameStatus)
