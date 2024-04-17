@@ -21,7 +21,7 @@ npm start
 ```
 Now open up a web browser window and visit this url to start playing:
 ```bash
-https://localhost:8080/
+http://localhost:3000/
 ```
 ## Rules 
 Time to test your critical thinking skills! You have to try and guess my secret number. 
