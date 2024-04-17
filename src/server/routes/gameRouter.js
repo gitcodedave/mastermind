@@ -8,11 +8,12 @@ router.get('/guess/:guess', gameController.guess, (req, res, next) => {
     return res.status(200).send(res.locals.data);
  })
 
- /* GET request will generate and return a random n digit number as a string */
+ /* GET request will make a query to the database for game config data */
 router.get('/gameSettings', gameController.getGameSettings, (req, res, next) => {
     return res.status(200).json(res.locals.gameSettings);
 })
 
+/* GET request will make a query to the database for current game stats */
 router.get('/currentGame', gameController.getCurrentGameData, (req, res, next) => {
     return res.status(200).json(res.locals);
 })
@@ -22,7 +23,7 @@ router.get('/newGame', gameController.startNewGame, (req, res, next) => {
     return res.status(200).json(res.locals.randomNums);
 })
 
-/* GET request will generate and return a random n digit number as a string */
+/* GET request is sent with a parameter labeled difficulty which will be sent in a database query */
 router.get('/changeDifficulty/:difficulty', gameController.changeDifficulty, (req, res, next) => {
     return res.status(200).json(res.locals.difficulty);
 })

@@ -21,6 +21,7 @@ connection.connect((err)=>{
     })
 })
 
+/* This initiates the tables when the game is first loaded */
 async function createTables (){
     pool.query(`CREATE TABLE IF NOT EXISTS gameSettings (
         id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
@@ -36,13 +37,15 @@ async function createTables (){
         correctLocation integer,
         correctNumber integer
     );`)
-    const check = await pool.query(`SHOW TABLES LIKE 'yourtable';`);
+    /* Had an issue in setting default values for gameSettings, so created this check function to insert manually */
+    const check = await pool.query(`SHOW TABLES LIKE 'gameSettings';`);
     if(!check.rows){
         pool.query(`INSERT INTO gameSettings (secretNumber, difficulty, attemptNumber, gameStatus)
         VALUES (1234, 4, 0, 'playing');`)
     }
 }
 
+/* Pool is created, not necessary for this small app but good practice for scaling */
 const pool = mysql.createPool({
     host: '127.0.0.1',
     user: 'root',
@@ -51,7 +54,7 @@ const pool = mysql.createPool({
     multipleStatements:true
 }).promise();
 
-/* The newGame function accepts one parameter which is passed as the new secret number in the database */
+/* The newGame function accepts one argument which is passed as the new secret number in the database, as well as reset the attempts and game status */
 async function newGame(newNum){
     await pool.query(`UPDATE gameSettings SET secretNumber = '${newNum}' WHERE id = '1'`)
     await pool.query(`UPDATE gameSettings SET attemptNumber = '0' WHERE id = '1'`)
@@ -67,10 +70,12 @@ async function newGame(newNum){
     )
 }
 
+/* The changeDifficulty function sends a query to the database to update the amount of digits for the secret number */
 async function changeDifficulty(difficulty){
     await pool.query(`UPDATE gameSettings SET difficulty = '${difficulty}' WHERE id = '1'`)
 }
 
+/* The addGuessAttempt function sends the data from the current guess attempt to the database to be stored */
 async function addGuessAttempt(attempt){
         await pool.query(`UPDATE gameSettings SET attemptNumber = ${attempt.attempt} WHERE id = '1'`)
         await pool.query(`REPLACE INTO currentGame VALUES (${attempt.attempt}, '${attempt.myGuess}', ${attempt.correctLocation}, ${attempt.correctCount})`)    
@@ -79,13 +84,13 @@ async function addGuessAttempt(attempt){
         };
 }
 
-/* When getGameSettingData is called, it makes a query to the database and returns an object with static game information */
+/* When getGameSettingData is called, it makes a query to the database and returns an object with game config information */
 async function getGameSettingData(){
     const result = await pool.query('SELECT * FROM gameSettings')
     return result[0][0];
 }
 
-/* When getCurrentGameData is called, it makes a query to the database and returns an object with current dynamic game information */
+/* When getCurrentGameData is called, it makes a query to the database and returns an object with current game attempts information */
 async function getCurrentGameData(){
     const result = await pool.query('SELECT * FROM currentGame')
     return result[0];

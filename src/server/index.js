@@ -1,8 +1,6 @@
 const express = require("express");
 const cors = require('cors');
 const path = require('path');
-const mysql = require('mysql');
-const { error } = require("console");
 
 /* Insert routers */
 const gameRouter = require('./routes/gameRouter.js');
