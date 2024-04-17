@@ -28,7 +28,9 @@ async function createTables (){
         secretNumber VARCHAR(6) NOT NULL DEFAULT "1234",
         difficulty integer NOT NULL DEFAULT "4",
         attemptNumber integer NOT NULL DEFAULT "0",
-        gameStatus VARCHAR(20) NOT NULL DEFAULT "playing"
+        gameStatus VARCHAR(20) NOT NULL DEFAULT "playing",
+        winScore integer DEFAULT '0',
+        loseScore integer DEFAULT '0'
     );
     
     CREATE TABLE IF NOT EXISTS currentGame (
@@ -75,12 +77,20 @@ async function changeDifficulty(difficulty){
     await pool.query(`UPDATE gameSettings SET difficulty = '${difficulty}' WHERE id = '1'`)
 }
 
+async function resetHighScore(){
+    await pool.query(`UPDATE gameSettings SET winScore = 0 WHERE id = '1'`)
+    await pool.query(`UPDATE gameSettings SET loseScore = 0 WHERE id = '1'`)
+}
+
 /* The addGuessAttempt function sends the data from the current guess attempt to the database to be stored */
 async function addGuessAttempt(attempt){
         await pool.query(`UPDATE gameSettings SET attemptNumber = ${attempt.attempt} WHERE id = '1'`)
         await pool.query(`REPLACE INTO currentGame VALUES (${attempt.attempt}, '${attempt.myGuess}', ${attempt.correctLocation}, ${attempt.correctCount})`)    
         if(attempt.gameStatus !== 'playing'){
             await pool.query(`UPDATE gameSettings SET gameStatus = '${attempt.gameStatus}' WHERE id = '1'`)
+            if(attempt.gameStatus === 'won'){
+                await pool.query(`UPDATE gameSettings SET winScore = winScore + 1 WHERE id = '1'`)
+            } else await pool.query(`UPDATE gameSettings SET loseScore = loseScore + 1 WHERE id = '1'`)
         };
 }
 
@@ -103,5 +113,6 @@ module.exports = {
     getCurrentGameData,
     addGuessAttempt,
     changeDifficulty,
-    newGame
+    newGame,
+    resetHighScore
 }
